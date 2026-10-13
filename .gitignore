@@ -1,0 +1,21 @@
+# secrets: never commit real keys (copy .env.example to .env)
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node / Vite
+node_modules/
+dist/
+
+# local tooling
+.claude/
+.DS_Store
+*.json.tmp
+output/*.corrupt-*.json
+
+# NOTE: data/*.db are intentionally committed (original + working copy) so graders can run the app.

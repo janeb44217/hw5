@@ -1,0 +1,35 @@
+:root {
+  --bg: #09090b;
+  --bg-2: #0f0d11;
+  --panel: #141217;
+  --panel-2: #1b1820;
+  --line: #2a2530;
+  --pink: #ff4fa3;
+  --pink-hot: #ff2e93;
+  --pink-soft: #ff9ccb;
+  --pink-ice: #ffe3f0;
+  --pink-dim: #5c1f3f;
+  --text: #f6eef3;
+  --muted: #a3949d;
+  --good: #ff8fd0;
+  --bad: #ff4f6d;
+  --radius: 16px;
+  color-scheme: dark;
+  font-family: 'Avenir Next', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 500px at 50% -200px, #2a0f20 0%, transparent 70%),
+    radial-gradient(circle at 1px 1px, #ffffff08 1px, transparent 0) 0 0 / 22px 22px,
+    var(--bg);
+}
+
+button { font: inherit; }
+code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; }

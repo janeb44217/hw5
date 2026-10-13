@@ -1,0 +1,75 @@
+{
+  "run": {
+    "database": "data/campus_customs_new.db",
+    "reset_at": "2026-10-13T15:27:05",
+    "shop_today": "2026-08-31",
+    "model": "gpt-6-luna (via Portkey) for every agent",
+    "starting_checking_balance": 3400.00,
+    "ending_checking_balance": 152.00,
+    "ending_balance_matches_cash_accounts": true,
+    "cash_math": "3400.00 - 840.00 (invoice 501) - 2400.00 (rent) - 8.00 (PO tee) = 152.00",
+    "audit_trail": "output/audit_trail.json (this run starts at the database_reset event at 15:27:05)"
+  },
+  "tickets": [
+    {
+      "id": 101,
+      "type": "customer_order",
+      "requester": "Tauhid Zaman",
+      "final_status": "resolved",
+      "outcome": "Size S tee was out of stock and the vendor was blocked by overdue invoice 501. After a human paid the invoice, the team ordered 1 tee ($8) from Bulldog Print Co, arriving 2026-09-05, and drafted an update for Tauhid. Draft #5 is the latest; nothing was sent.",
+      "team_runs": 4,
+      "cash_change": -848.00,
+      "agents": {
+        "boss": "Routed to Inventory first, then Accounting and Customer Service. Kept the ticket in waiting_approval until both payments were approved. In run 3 it refused to close because nothing showed the PO had been placed. Resolved it in run 4 once check_stock showed 1 on order arriving 2026-09-05.",
+        "inventory": "Found CC-TEE-WHITE S at 0 on hand (short 1). Matched apparel to Bulldog Print Co (vendor 1, 5-day lead). Reported it blocked by invoice 501, and later that it could ship. Finally confirmed 1 unit on order with no new order needed.",
+        "accounting": "Verified invoice 501 ($840, 3 days overdue) and cash, then filed request #1 to pay it. After it was paid, filed request #3, a purchase order for 1 × CC-TEE-WHITE S at $8.00.",
+        "facilities": "Not involved (no lease on this ticket).",
+        "customer_service": "Drafted updates to Tauhid (drafts #1, #3, #4, #5). The final draft says the restock is on order with expected arrival Sept 5, without claiming it has shipped."
+      },
+      "human_approvals": [
+        {"request_id": 1, "kind": "invoice", "ref": "invoice 501", "payee": "Bulldog Print Co", "amount": 840.00, "approved_by": "Jane", "at": "2026-10-13T15:36:10", "balance_after": 2560.00},
+        {"request_id": 3, "kind": "purchase_order", "ref": "1 × CC-TEE-WHITE size S", "payee": "Bulldog Print Co", "amount": 8.00, "approved_by": "Jane", "at": "2026-10-13T15:39:58", "balance_after": 152.00, "expected_arrival": "2026-09-05"}
+      ],
+      "drafts": [1, 3, 4, 5],
+      "note": "Run 3 exposed a tool gap: paid POs were not shown as placed or on order. Fixed by adding on_order/placed_orders to check_stock, logging 'purchase order placed' on approval, and adding a Boss prompt rule. Run 4 then resolved the ticket."
+    },
+    {
+      "id": 102,
+      "type": "rent_notice",
+      "requester": "Elm City Properties",
+      "final_status": "resolved",
+      "outcome": "Verified the notice against lease 1 ($2,400 due 2026-09-02, 2 days from shop today). Accounting filed the rent for approval, the human approved it, and the lease's next_due moved to 2026-10-02.",
+      "team_runs": 2,
+      "cash_change": -2400.00,
+      "agents": {
+        "boss": "Routed to Facilities first and set waiting_approval. On the second run it saw request #2 paid and resolved the ticket alone, with no delegations.",
+        "inventory": "Not involved.",
+        "accounting": "Called by Facilities. Checked cash and existing requests, then filed request #2 (rent, lease 1, $2,400), leaving $160 after pending.",
+        "facilities": "Checked lease 1 (Chapel Street shop, Elm City Properties, $2,400, due 2026-09-02). Confirmed the email matches and handed off to Accounting.",
+        "customer_service": "Not involved (no reply needed to the landlord)."
+      },
+      "human_approvals": [
+        {"request_id": 2, "kind": "rent", "ref": "lease 1", "payee": "Elm City Properties", "amount": 2400.00, "approved_by": "Jane", "at": "2026-10-13T15:36:14", "balance_after": 160.00}
+      ],
+      "drafts": []
+    },
+    {
+      "id": 103,
+      "type": "price_override",
+      "requester": "Yale AI Club",
+      "final_status": "resolved",
+      "outcome": "Offered 15% off the 8 size-M hoodies in stock ($49.30 each, $394.40 total, 55.4% margin). Declined to promise the other 12: the restock vendor was blocked and $264 for 12 units exceeded the $160 left after pending. Draft #2 is on the board; no money was spent.",
+      "team_runs": 1,
+      "cash_change": 0.00,
+      "agents": {
+        "boss": "Routed to Inventory first, then Accounting. Decided on 15% off the 8 in stock, no promise on the remaining 12. Sent it to Customer Service and resolved the ticket.",
+        "inventory": "CC-HOOD-NAVY M: 8 on hand, 20 requested, short 12. The restock vendor (Bulldog Print Co) was blocked by invoice 501.",
+        "accounting": "Ran check_margin at 15% ($49.30/unit, 55.4%) and 25% ($43.50/unit, 49.4%), both above the $22 cost. Showed a 12-unit restock ($264) wouldn't fit in the $160 after pending. Confirmed the 8-unit price for Customer Service.",
+        "facilities": "Not involved.",
+        "customer_service": "Drafted the reply to the Yale AI Club (draft #2) with the exact price for the 8 available and no date for the other 12."
+      },
+      "human_approvals": [],
+      "drafts": [2]
+    }
+  ]
+}
